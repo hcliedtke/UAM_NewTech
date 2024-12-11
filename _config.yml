@@ -1,0 +1,5 @@
+theme: jekyll-theme-minimal
+title: Transcriptomics of Plastic Phenotypes 
+description: RNAseq as a powerful tool in evolutionary biology
+logo: /assets/img/course_logo.png
+show_downloads: true
