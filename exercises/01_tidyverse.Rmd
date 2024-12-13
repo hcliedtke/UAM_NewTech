@@ -1,7 +1,7 @@
 ---
 title: "Exploring Phenotypes with the Tidyverse"
 subtitle: | 
-  PoE: Transcriptomics of Plastic Phenotypes
+  New Technologies for Developmental Evolutionary Biology Studies
 author:
 - name: "H. Christoph Liedtke"
   affiliation: "Estación Biológica de Doñana"

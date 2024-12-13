@@ -1,7 +1,7 @@
 ---
 title: "Differential Gene Expression Analysis with DESeq2"
 subtitle: | 
-  PoE23: Principles of Evolution
+  New Technologies for Developmental Evolutionary Biology Studies
 author:
 - name: "H. Christoph Liedtke"
   affiliation: "Estación Biológica de Doñana"
@@ -13,7 +13,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
-                      eval = FALSE,
+                      eval = TRUE,
                       message=FALSE,
                       error=FALSE,
                       fig.width=12,
