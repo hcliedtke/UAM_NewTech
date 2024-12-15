@@ -8,7 +8,7 @@ author:
 date: '2024-10-26'
 output: webexercises::webexercises_default
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +18,6 @@ knitr::opts_chunk$set(echo = TRUE,
                       error=FALSE,
                       fig.width=12,
                       fig.height=8)
-knitr::opts_knit$set(root.dir = './')
 library(webexercises)
 ```
 
@@ -84,7 +83,13 @@ lapply(X=txi, FUN=head)
 
 > *Question:* What is the content of this object and how is it arranged?
 
-`r hide("Show Answer")` \* All three arrays have target transcripts as rows and biological samples per column. \* Counts: estimate of the number of reads mapping to each transcript. \* Abundance: Raw counts cannot be compared across samples because each library may vary slightly in terms of the total number of reads, differences in sequencing bias and difference in transcript lengths. Salmon (the program we used to quantify reads) also produces an array of "Abundances" which are normalized counts. According to the [salmon documention](https://salmon.readthedocs.io/en/latest/file_formats.html), this is Transcripts Per Million (TPM). This basically means that per sample, the total counts add up to 1 million. We could check this:
+`r hide("Show Answer")`
+
+-   All three arrays have target transcripts as rows and biological samples per column.
+
+-   Counts: estimate of the number of reads mapping to each transcript.
+
+-   Abundance: Raw counts cannot be compared across samples because each library may vary slightly in terms of the total number of reads, differences in sequencing bias and difference in transcript lengths. Salmon (the program we used to quantify reads) also produces an array of "Abundances" which are normalized counts. According to the [salmon documention](https://salmon.readthedocs.io/en/latest/file_formats.html), this is Transcripts Per Million (TPM). This basically means that per sample, the total counts add up to 1 million. We could check this:
 
 ```{r}
 apply(X=txi$abundance, FUN=sum, MARGIN = 2)
@@ -122,7 +127,7 @@ txi$counts %>%
 
 `r unhide()`
 
-## Prefiltering
+## Pre-filtering
 
 We will see later on that software for performing differential gene expression is quite good at dealing with non-normal, high zero-count data, but we can make our lives a little easier by removing at least those genes/loci that don't have any mapped reads.
 
@@ -164,7 +169,7 @@ rna_samples<-tibble(
 rna_samples
 ```
 
-> *Question:* How many repliactes do we have per tissue type per background?
+> *Question:* How many replicates do we have per tissue type per background?
 
 `r hide("Show Answer")`
 
@@ -291,7 +296,7 @@ dds <- DESeq(dds)
 dds
 ```
 
-> *Note: it looks like we are "overwriting" the `dds` object, but really, we are just adding more inforamtion to it*
+> *Note: it looks like we are "overwriting" the `dds` object, but really, we are just adding more information to it*
 
 This incredibly convenient function has done all of the heavy lifting for us, and it has even run some pair-wise tests already, based on the `~position + background` variables we set.
 
@@ -397,7 +402,7 @@ annotations<-read_csv("../data/annotations.csv")
 annotations
 ```
 
-> *Question:* Do all of our genes have homologous genes in *X. tropicals*? And are they all annotatated? What does this mean?
+> *Question:* Do all of our genes have homologous genes in *X. tropicalis*? And are they all annotated? What does this mean?
 
 `r hide("Show Answer")`
 
@@ -412,8 +417,8 @@ annotations %>%
 
 ```
 
--   More than 200 *P.cultripes* loci did not match any loci in *X. tropicals*. Miss-assembly? 200 million years of independent evolution?
--   More than 5500 loci have no annotations. This is what is called the dark proteome (porteins with no defined 3D structure). It is estimated that 40-50% of the eukaryote proteome is dark!
+-   More than 200 *P.cultripes* loci did not match any loci in *X. tropicalis*. Miss-assembly? 200 million years of independent evolution?
+-   More than 5500 loci have no annotations. This is what is called the dark proteome (proteins with no defined 3D structure). It is estimated that 40-50% of the eukaryote proteome is dark!
 
 `r unhide()`
 
