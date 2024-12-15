@@ -15,6 +15,8 @@ We will then working through the data obtained from an RNAseq experiment to lear
 ### Introduction
 
 * _Lecture:_  [A Brief Word on Phenotypic Plasticity and the Introduction to the Practicals](./lectures/Plasticity.pdf){:target="_blank"}. [45 mins]
+
+
 ---
 ### Pracrical sessions
 
