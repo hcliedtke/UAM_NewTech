@@ -57,7 +57,9 @@ The photospetrometry measurements are stored as a comma-separated values table (
 
 ```{r}
 dat_spect<-read_csv("../data/minolta_data.csv")
-dat_spect
+dat_spect 
+colnames(dat_spect)
+
 ```
 
 When we call the object, we should notice that it has been stored as a `tibble`. This is essentially a dataframe, but it allows us to preview the first 10 rows, without calling the `head()` function and it lists all column names and data classes per column. *Note: tibbles generally do not have rownames*.
@@ -151,7 +153,7 @@ We have at least two measurements per sample. Going forward, we might want to su
 ```{r}
 dat_clean %>%
   group_by(specimen_id, position) %>% # group by one or more columns
-  summarise(mean=mean(`360nm`)) # use summarise to create a new variable, and apply a function to it
+  summarise(mean_360=mean(`360nm`)) # use summarise to create a new variable, and apply a function to it
 ```
 
 We now have a new data frame with only 16 rows (single rows per specimen+position combination), and we have a new column called "mean" which is the mean of the 360nm reflectance values.
@@ -311,7 +313,7 @@ General theme elements can be manipulated both with canned theme functions, or m
 # line graph
 dat_long %>% # we can also pipe the data to the plot. This is useful if we want to manipulate it first
   filter(specimen_id==10) %>% # keep only one sample (10)
-  ggplot(mapping=aes(x=wavelength, y=reflectance, color=position)) + # colour replaces grouping for have different lines for dorsal and ventral measurements
+  ggplot(mapping=aes(x=wavelength, y=reflectance, group=position, color=position)) + # colour replaces grouping for have different lines for dorsal and ventral measurements
   geom_line() +
   ## add a title
   ggtitle("Spectral reflectances of dorsal and ventral skin") +
@@ -366,7 +368,7 @@ As one final exercise, lets use some of ggplot's built in summarizing functions 
 
 ```{r}
 dat_long %>%
-  ggplot(mapping=aes(x=wavelength, y=reflectance, color=background)) + # drop the grouping variable here
+  ggplot(mapping=aes(x=wavelength, y=reflectance, group=background,color=background)) + # drop the grouping variable here
   geom_smooth(stat="smooth", method="loess", span=0.2) + # fit loess smoothing with a more relaxed smoothing span
   facet_wrap(~position) +
   theme_classic()
