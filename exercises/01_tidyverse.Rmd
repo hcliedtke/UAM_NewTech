@@ -5,7 +5,7 @@ subtitle: |
 author:
 - name: "H. Christoph Liedtke"
   affiliation: "Estación Biológica de Doñana"
-date: '2024-10-23'
+date: '2025-12-09'
 output: webexercises::webexercises_default
 editor_options: 
   chunk_output_type: inline
@@ -51,7 +51,7 @@ You should see that a call to load `tidyverse` library essentially just loads a 
 
 ### Experimental Background and data loading
 
-As a quick re-cap, we have just finished a pigmentation plasticity experiment with *Pelobates cultripes* tadpoles. We reared a bunch of tadpoles from the same egg clutch (e.g. genetically similar individuals) under standardized laboratory conditions. The only condition we manipulated is whether tadpoles were reared in a black or a white bucket. After 40 or so days of exposure to these conditions, we anesthetized the tadpoles to be able to take photospectrometry measurements of the skin colour on their dorsum and ventrum, and to also a skin sample that we stored in RNAlater for an RNA extraction and gene expression analsis.
+As a quick re-cap, we have just finished a pigmentation plasticity experiment with *Pelobates cultripes* tadpoles. We reared a bunch of tadpoles from the same egg clutch (e.g. genetically similar individuals) under standardized laboratory conditions. The only condition we manipulated is whether tadpoles were reared in a black or a white bucket. After 40 or so days of exposure to these conditions, we anesthetized the tadpoles to be able to take photospectrometry measurements of the skin colour on their dorsum and ventrum, and to also a skin sample that we stored in RNAlater for an RNA extraction and gene expression analysis.
 
 The photospetrometry measurements are stored as a comma-separated values table (.csv file), and we have a second file that contains information about what background the tadpoles were reared on. Lets load the first dataset using one of the tidyverse functions and lets explore it.
 
@@ -112,31 +112,32 @@ dat_spect %>%
   arrange(`360nm`) # specify row order based on column values
 ```
 
-#### 3. Mutate, separate and strings
+#### 3. Mutate, separate (and strings)
 
-Creating a new variable in the tidyverse uses the `mutate()` function. By looking at the `sample` column, we can see that there is some relevant data hidden in there. This variable seems to be composed of a sample number followed by D = Dorsal, V = Ventral. Let's see if we can extract that information and structure it into separate columns.
+Creating a new variable in the tidyverse uses the `mutate()` function. The most basic use, would be something like this:
 
-We can do this most easily with the canned `separate()` function:
+```{r}
+dat_spect %>%
+  select(id, sample, `360nm`, `370nm`) %>% # select just the first few columns, for now.
+  mutate("Species"="Pelobates cultripes") %>% # add a new column with a character vector
+  mutate("additive_values"=`360nm`+`370nm`) # add a new column using some sort of operation
+```
+
+Note that new columns are added at the end of the dataframe.
+  
+
+By looking at the `sample` column, we can see that there is some relevant data hidden in there. This variable seems to be composed of a sample number followed by D = Dorsal, V = Ventral. Let's see if we can extract that information and structure it into separate columns.
+  
+We can do this most easily with the canned `separate()` function, which is in a way a wrapper around mutate. 
 
 ```{r}
 dat_spect %>%
   separate(col=sample, into=c("specimen_id","position"), sep="_")
 ```
 
-If we want more control, when working with strings (characters), the tidyverse leans heavily on the `stringr` package. Most functions are self explanatory and start with "str\_". These are very powerful functions because they work with `regular expressions` (patterns). Lets try to make a new column, only with the anatomical position.
+As you can see, it has split the `sample` column into two new columns, has removed the original column and has positioned the new columns where the old one was.  
 
-```{r}
-dat_spect %>%
-  mutate(position=str_extract(string=sample, pattern="[A-Z]")) # mutate to create a new variable/column, [A-Z] to find only letters
-
-# it looks like we have created the column, but it's at the very end. lets move around the columns
-dat_spect %>%
-  mutate(position=str_extract(string=sample, pattern="[A-Z]")) %>%
-  select(position,everything())
-
-```
-
-For now, lets stick to the simpler `separate()` function, and lets also remove the ID column. We can save the original data object to apply the changes permanently. I generally don't recommend to overwrite the original object (i.e. saving with the same name) becuase this can lead to issues when going back up to earlier parts of code.
+Up until now, we have manipulated data, but we have not actually greated any data. We can make those operations more permanent, by storing them as a new object. I generally don't recommend to overwrite the original object (i.e. saving with the same name) because this can lead to issues when going back up to earlier parts of code, so let's creat e new one here, and while we are at it, let's remove the `id` column that we don't want anymore.
 
 ```{r}
 dat_clean<-dat_spect %>%
@@ -145,6 +146,9 @@ dat_clean<-dat_spect %>%
 
 dat_clean
 ```
+
+As a note, if we want more control over how to separate or create new variables from existing ones when working with strings (characters), the tidyverse leans heavily on the `stringr` package. Most functions are self explanatory and start with "str_". These are very powerful functions because they work with `regular expressions` (patterns). Definitely worth getting familarized with, and we might see those pop up in the next tutorial. 
+
 
 #### 4. Grouping and summarizing!
 
@@ -420,5 +424,5 @@ dat_area%>%
 ### Final comments:
 
 -   Switching to the tidyverse can be a little daunting at first and may seem redundant. Many things can be done in base R. However, it is a powerful too for complex data organization and manipulation.
--   Learn by doing! As with any programming language, the best way to learn is to just get your hands dirty. Your regular google search should be "how do i \_\_\_\_\_\_\_\_ using the tidyverse?".
+-   Learn by doing! As with any programming language, the best way to learn is to just get your hands dirty. Your regular google search should be "how do i _____ using the tidyverse?".
 -   Don't be afraid to use ChatGPT, but try it yourself first, ask for specific bits of code, not everything, and make an effort to understand what each step of the code is doing.
