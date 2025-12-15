@@ -208,18 +208,10 @@ dds
 
 First up, we may be curious as to whether there are some basic patterns in our data. For instance, we would expect biological replicates to cluster together based on their overall expression values. As it stands, we are dealing with a highly dimensional dataset though (each sample has >30k 'variables') and so a dimensional reduction technique like a Principal Component analysis might be a good idea.
 
-Before we go any further however, we need to do a better job at normalizing our count data, than just making counts relative to 1 million per sample. This includes:
+Before we go any further however, we need to do a better job at normalizing our count data *across* samples, so that:
 
-1.  Normalizing counts *across* samples, so that we can compare them more accurately
-2.  Normalize counts with respect to library/target size.
-
-This second normalization may require a bit of explanation. You should recall that the `dds` object contains not only the counts, but also the transcript lengths.
-
-```{r}
-assay(dds, "avgTxLength") %>% head()
-```
-
-This shows that the different targets (i.e. the loci that the RNA-seq reads were mapped to) are of very different lengths. Logically, a larger target is expected to also receive more mapped reads! This can greatly impact our results and needs to be accounted for.
+1.  The variances for highly expressed genes are appriximatly similar to the variances for low expressed genes.
+2.  Counts are normalized with respect to library size (i.e. correcting differences in sequencing depths).
 
 One technique to perform both of these normalizations is to use a `Variance Stabilising Transformation`. For this we need both the counts and the target lengths, and so conveniently, we can apply this directly to the `dds` object we have created.
 
