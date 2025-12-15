@@ -5,7 +5,7 @@ subtitle: |
 author:
 - name: "H. Christoph Liedtke"
   affiliation: "Estación Biológica de Doñana"
-date: '2024-10-26'
+date: '2025-12-15'
 output: webexercises::webexercises_default
 editor_options: 
   chunk_output_type: inline
@@ -13,7 +13,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
-                      eval = TRUE,
+                      eval = FALSE,
                       message=FALSE,
                       error=FALSE,
                       fig.width=12,
@@ -206,7 +206,7 @@ dds
 
 ## Visualize your count data: PCA
 
-First up, we may be curious as to whether there are some basic patterns in our data. For instance, we would expect biological replicates to cluster together based on their overall expression values. As it stands, we are dealing with a highly dimensional dataset though (each sample has \>30k 'variables') and so a dimensional reduction technique like a Principal Component analysis might be a good idea.
+First up, we may be curious as to whether there are some basic patterns in our data. For instance, we would expect biological replicates to cluster together based on their overall expression values. As it stands, we are dealing with a highly dimensional dataset though (each sample has >30k 'variables') and so a dimensional reduction technique like a Principal Component analysis might be a good idea.
 
 Before we go any further however, we need to do a better job at normalizing our count data, than just making counts relative to 1 million per sample. This includes:
 
@@ -353,7 +353,7 @@ summary(res_pos, alpha=0.05)
 summary(res_bg, alpha=0.05)
 ```
 
-This returns the number of up-regulated genes (LFC\>0) and down-regulated genes (LFC\<0) with respect to the control variable. Other information is also given, such as the number of outliers and low counts.
+This returns the number of up-regulated genes (LFC>0) and down-regulated genes (LFC<0) with respect to the control variable. Other information is also given, such as the number of outliers and low counts.
 
 > *Question:* What do you notice about these results?
 
